@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>useEffect Assignment-10</title>
+
+    <!-- Title ICON -->
+    <link rel="icon" href="https://th.bing.com/th/id/OIP.VJHsPjqDjAE85lKSCYOR7wHaHa?pid=ImgDet&rs=1">
+
+    <!-- Bootstrap4 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+    <!-- Internal CSS -->
+    <style>
+        body{
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .underline{
+            width: 270px;
+            height: 0.4rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root">
+    </div>
+
+    <!-- ReactJS Dependency -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+
+    <!-- React DOM Dependency -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <!-- Babel JS Dependency -->
+    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+
+    <!-- Axios Dependency -->
+    <script src="https://unpkg.com/axios@0.21.4/dist/axios.min.js"></script>
+
+    <!-- Internal JS -->
+    <script type="text/babel">
+
+        // Declared & Assigned
+        const rootElement = document.getElementById('root');
+
+        // Object Destructuring - ES6
+        const{useState,useEffect} = React;
+
+        // parent component
+        function App(props){
+
+            // State variable & function to store complete country details
+            const[names,setNames] = useState([]);
+
+            const baseUrl = 'https://restcountries.com/v2/all';
+            
+            // Main Logic - Asynchronous Nature
+            const useEffectFunc = function(){
+                axios
+                    .get(baseUrl)
+
+                    .then(function(response){
+                        const result = response.data;
+                        // console.log(result);
+
+                        // Invoke state function
+                        setNames(result);
+                    })
+
+                    .catch(function(error){
+                        alert(error.message);
+                    })
+            }
+
+            // Invoke useEffect Hook
+            useEffect(useEffectFunc,[]);
+
+            return(
+                <div className='mt-2'>
+
+                    <h1 className='text-danger text-center mb-0 font-weight-bold'>
+                        useEffect Hook 
+                    </h1>
+
+                    <div className="underline bg-dark mx-auto"></div>
+
+                    <h2 className='text-primary ml-2 mt-2'>
+                        Display Neighbouring Countries
+                    </h2>
+
+                    {/* Child component instance pass data via props */}
+                    <FormDropDown
+                        data={names}
+                    />
+
+                </div>
+            )
+        }
+
+        // child component - 1 
+        function FormDropDown(props){
+
+            // Object Destructuring - ES6
+            const{data} = props;
+
+            const[borders,setBorders] = useState([]);
+
+            // State variable & function to make form as controlled input
+            const[option,setOption] = useState('');
+
+            // Event Handler as callback function
+            const handleChange = function(e){
+                const userInput = e.target.value;
+
+                // To filter the result based on user selection
+                const findBorderCountries = data.find(function(ele){
+                    // Object Destructuring - ES6
+                    const{name} = ele;
+
+                    if(name === userInput){
+                        return true;
+                    }
+                })
+                
+                // join(', ') - converts array to string
+                const result = findBorderCountries.borders.join(',');
+                // console.log(result);
+
+                const baseurlTwo = `https://restcountries.com/v3.1/alpha?codes=${result}`;
+
+                
+                // Asynchronous nature
+                axios
+                    .get(baseurlTwo)
+
+                    .then(function(res){
+                        const result = res.data;
+                        // console.log(result);
+
+                        // Invoke State function
+                        setBorders(result);
+                    })
+
+                    .catch(function(error){
+                        alert(error.message);
+                    })
+
+                // Invoke state function
+                setOption(userInput);
+            }
+
+            return(
+                <React.Fragment>
+
+                    <form>
+
+                        <div className="form-group ml-2">
+
+                            <select value={option} onChange={handleChange}>
+
+                                <option> Select </option>
+
+                                {
+                                    data.map(function(ele,index){
+                                        // Object Destructuring - ES6
+                                        const{name} = ele;
+
+                                        return(
+                                            <option value={name} key={index}>{name} </option>
+                                        )
+                                    })
+                                }
+
+                            </select>
+
+                        </div>
+
+                    </form>
+
+                    {/* Child Component Instance to pass borders via props */}
+                    {/* Conditional Rendering Simple...if */}
+                    {
+                        borders.length > 0 && <Table table={borders} />
+                    }
+                        
+                </React.Fragment>
+            )
+        }
+
+        // Child Component - 2 
+        function Table(props){
+            // Object destructuring - ES6
+            const{table} = props;
+
+            return(
+                <React.Fragment>
+
+                    <h3 className='text-capitalize ml-2 text-success'>
+                        neighbouring countries - <span className='text-warning'> {table.length} </span>
+                    </h3>
+
+                    {/* Child Component Instance */}
+                    <TableStructure 
+                        tableData = {table}
+                    />    
+
+                </React.Fragment>
+            )
+        }
+
+        // Child Component - 3 
+        function TableStructure(props){
+            // Object Destructuring - ES6
+            const{tableData} = props;
+
+            return(
+                <React.Fragment>
+
+                    <table className='table table-striped table-sm ml-2 mr-2'>
+
+                        <thead>
+
+                            <tr className='text-center'>
+
+                                <th scope="col">Flag</th>
+
+                                <th scope="col">Name</th>
+
+                                <th scope="col">Capital</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            {
+                                tableData.map(function(ele,index){
+                                    // console.log(ele);
+                                    
+                                    // Object Destructuring - ES6
+                                    const{flags,capital,name} = ele;
+                                
+                                    return(
+
+                                        <tr key={index} className='text-center'>
+
+                                            <td>
+
+                                                <img 
+                                                    src={flags.png} 
+                                                    style={{width:'25px'}} 
+                                                    alt={name.common}
+                                                />
+
+                                            </td>
+
+                                            <td>
+                                                {name.common}
+                                            </td>
+
+                                            <td>
+                                                {capital}
+                                            </td>
+
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+
+                    </table>
+
+                </React.Fragment>
+            )
+
+        }
+        ReactDOM.render(<App/>,rootElement);
+    </script>
+</body>
+</html>
