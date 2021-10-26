@@ -1,0 +1,14 @@
+1)header 	
+    If true, the first row of parsed data will be interpreted as field names. An array of field names will be returned in meta, and each row of data will be an object of values keyed by field name instead of a simple array. Rows with a different number of fields from the header row will produce an error. Warning: Duplicate field names will overwrite values in previous fields having the same name. 
+
+2)dynamicTyping 	
+    If true, numeric and boolean data will be converted to their type instead of remaining strings. Numeric data must conform to the definition of a decimal literal. Numerical values greater than 2^53 or less than -2^53 will not be converted to numbers to preserve precision. European-formatted numbers must have commas and dots swapped. If also accepts an object or a function. If object it's values should be a boolean to indicate if dynamic typing should be applied for each column number (or header name if using headers). If it's a function, it should return a boolean value for each field number (or name if using headers) which will be passed as first argument. 
+
+3)complete 	
+    The callback to execute when parsing is complete. It receives the parse results. If parsing a local file, the File is passed in, too:
+
+    complete: function(results, file) {
+        console.log("Parsing complete:", results, file);
+    }
+
+    When streaming, parse results are not available in this callback. 
