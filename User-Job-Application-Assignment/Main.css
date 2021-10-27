@@ -1,0 +1,40 @@
+@charset "UTF-8";
+body {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.underline-four {
+  width: 334px;
+  height: 0.4rem;
+}
+
+.tria::before {
+  /* position: absolute takes elements “out of flow” so its grid space gets collapsed. */
+  position: absolute;
+  content: '';
+  top: 3.44rem;
+  width: 2px;
+  left: 9rem;
+  height: 0;
+  /* border:size style color */
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid lavender;
+}
+
+.linav ul {
+  text-align: center;
+  line-height: 30px;
+  height: 60px;
+}
+
+.linav ul li {
+  display: inline-block;
+  width: 350px;
+  margin-top: 1rem;
+}
+/*# sourceMappingURL=Main.css.map */
