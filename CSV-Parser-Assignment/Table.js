@@ -25,14 +25,15 @@ function Table(props) {
                     </tr>
 
                 </thead>
-
-                {
-                    moveData.map(function(ele,index){
-                        return(
-
-                            <tbody>
+        
+                <tbody>
+                    {
+                        moveData.map(function(ele,index){
+            
+                            return(
 
                                 <tr key={index}>
+
                                     <td>
                                         {ele['Name (Original Name)']}
                                     </td>
@@ -44,14 +45,13 @@ function Table(props) {
                                     <td>
                                         {ele['Total Duration (Minutes)']}
                                     </td>
+
                                 </tr>
 
-                            </tbody>
-                            
-                        )
-
-                    })
-                }
+                            )
+                        })
+                    }
+                </tbody>   
 
             </table>
         </>
