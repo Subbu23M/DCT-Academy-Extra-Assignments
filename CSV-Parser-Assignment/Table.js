@@ -29,9 +29,7 @@ function Table(props) {
                 <tbody>
                     {
                         moveData.map(function(ele,index){
-            
                             return(
-
                                 <tr key={index}>
 
                                     <td>
@@ -47,7 +45,6 @@ function Table(props) {
                                     </td>
 
                                 </tr>
-
                             )
                         })
                     }
